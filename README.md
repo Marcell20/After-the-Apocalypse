@@ -4,8 +4,11 @@
 https://drive.google.com/file/d/1DL9CbAjPxmQ2LTZQfni51dAUs3tbBRtM/view?usp=sharing
 
 ## How to download the game:
-Download the code using this link:  https://github.com/Marcell20/After-the-Apocalypse or https://github.com/KevDeem/TheApocalypse
-Download the assets using this link: https://drive.google.com/drive/folders/1BVKKZKtMEQxGc-VIRFrhHuwuiHKdfG7K?usp=sharing
+#### Download the code using this link:  
+#### https://github.com/Marcell20/After-the-Apocalypse 
+#### or 
+#### https://github.com/KevDeem/TheApocalypse
+#### Download the assets using this link: https://drive.google.com/drive/folders/1BVKKZKtMEQxGc-VIRFrhHuwuiHKdfG7K?usp=sharing
 Extract everything into the same folder
 Open the folder using VScode
 Download Live Server Plugin
