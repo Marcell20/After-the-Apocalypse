@@ -1,0 +1,563 @@
+
+<html>
+    <head>
+
+        <title>Final Project - Comp Graph by Marcell Alvianto & Kevin Dimas  </title>
+        <script src="https://cdn.babylonjs.com/babylon.js"></script>
+        <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+        <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
+        <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
+
+
+        <style>
+            html, body {
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            #render {
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+            }
+        </style>
+    </head>
+
+    <body>
+    <canvas id="render"></canvas>
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            var canvas = document.getElementById('render');
+            var engine = new BABYLON.Engine(canvas, true);
+            var createScene = function() {
+                //Main menu UI
+                var menuscene = new BABYLON.Scene(engine);
+                
+                var gameOn = false;
+                
+                var camera1 = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2, 5, BABYLON.Vector3.Zero(), menuscene);
+                camera1.attachControl(canvas, true);
+
+                var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 0.5, 0), menuscene);
+                light.intensity = 0.8;
+
+                var guiMenu = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("guiMenu");
+
+                var title = new BABYLON.GUI.TextBlock("After The Apocalypse");
+                title.text = "After The Apocalypse";
+                title.color = "white";
+                title.fontSize = 72;
+                title.top = "-25%";
+
+                var playButton = BABYLON.GUI.Button.CreateSimpleButton("PlayButton", "Play");
+                playButton.width = 0.2;
+                playButton.height = 0.1;  
+                playButton.color = "black";
+                playButton.fontSize = 30;
+                playButton.fontFamily = "Verdana";
+                playButton.background = "white";
+                playButton.cornerRadius = "100";
+
+                playButton.onPointerUpObservable.add(function(){
+                    engine.stopRenderLoop();
+                    engine.runRenderLoop(function () {
+                        storyscene.render();
+                    })
+                    return menuscene;
+                });
+
+                guiMenu.addControl(title);
+                guiMenu.addControl(playButton);
+                
+                engine.runRenderLoop(function(){
+                    menuscene.render();
+                });
+
+                // Story Scene before continue to Game
+                var storyscene = new BABYLON.Scene(engine);
+
+                var camera2 = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -14), scene);
+                camera2.setTarget(BABYLON.Vector3.Zero(storyscene));
+
+                var light2 = new BABYLON.HemisphericLight("light2", new BABYLON.Vector3(1,0.5,0), storyscene);
+                light2.intensity = 1;
+
+                var ground2 = BABYLON.Mesh.CreateGround("ground2", 26, 26, 2, scene);        
+                ground2.rotation = new BABYLON.Vector3(5, 0, 0);
+                ground2.position = new BABYLON.Vector3(0, 3, 0);
+
+                var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(ground2, 1024, 1024);    
+
+                var rectangle = new BABYLON.GUI.Rectangle("rect");
+                rectangle.background = "black";
+                rectangle.color = "black";
+                rectangle.width = "100%";
+                rectangle.height = "100%";                
+
+                advancedTexture.addControl(rectangle);
+
+                var guiStory = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("guiStory");
+
+                var text1 = new BABYLON.GUI.TextBlock("text1");
+                text1.fontFamily = "Helvetica";
+                text1.textWrapping = true;
+                text1.text = "They came, attacked, and left. Noone knew what had happened, it was too quick. There was no time to react to the attack. Everyone around you has died from the attack. Miraculously, for some odd reason, you managed to lay low and survived without them knowing you were still alive. There is one helicopter left that they didn't fully destroy. Your job is to find spare parts around the city to fix the helicopter, and get out of there. Find civilization, and therefore safety. Act quick, you don't have much time.";
+                text1.color = "white";
+                text1.fontSize = "20px";
+                text1.top = "-25%";
+                text1.width = "450px";
+                text1.height = "250px";
+
+                var nextButton = BABYLON.GUI.Button.CreateSimpleButton("nextButton", "next");
+                nextButton.width = 0.1;
+                nextButton.height = 0.1;
+                nextButton.color = "black";
+                nextButton.fontSize = 25;
+                nextButton.fontFamily = "Verdana";
+                nextButton.background = "white";
+                nextButton.cornerRadius = "100";
+                nextButton.top = "10%";
+                
+                nextButton.onPointerUpObservable.add(function(){
+                    engine.stopRenderLoop(storyscene);
+                    gameOn = true;
+                    canvas.requestPointerLock();
+                    engine.runRenderLoop(function (){
+                        scene.render();
+                    })
+                    return storyscene;
+                });
+                guiStory.addControl(text1);
+                guiStory.addControl(nextButton);
+
+                // Ending scene
+                var endingscene = new BABYLON.Scene(engine);
+                var camera3 = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -14), scene);
+                camera3.setTarget(BABYLON.Vector3.Zero(storyscene));
+
+                var light3 = new BABYLON.HemisphericLight("light2", new BABYLON.Vector3(1,0.5,0), storyscene);
+                light3.intensity = 1;
+
+                var ground3 = BABYLON.Mesh.CreateGround("ground3", 26, 26, 2, scene);        
+                ground3.rotation = new BABYLON.Vector3(5, 0, 0);
+                ground3.position = new BABYLON.Vector3(0, 3, 0);
+
+                var advancedTexture2 = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(ground2, 1024, 1024);    
+
+                var rectangle3 = new BABYLON.GUI.Rectangle("rect");
+                rectangle3.background = "black";
+                rectangle3.color = "black";
+                rectangle3.width = "100%";
+                rectangle3.height = "100%";            
+                advancedTexture2.addControl(rectangle3);
+
+                var endingStory = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("endingStory");
+                var textending = new BABYLON.GUI.TextBlock("textending");
+                var textending = new BABYLON.GUI.TextBlock("textending");
+                textending.fontFamily = "Helvetica";
+                textending.textWrapping = true;
+                textending.text = "Congratulations, you made it. After you fixed the helicopter, you flew to the next city, trying to find civilization. There was none. you flew as far as you could, but there was nothing left. They destroyed everything. It was the apocalypse";
+                textending.color = "white";
+                textending.fontSize = "20px";
+                textending.top = "-25%";
+                textending.width = "450px";
+                textending.height = "250px";
+                endingStory.addControl(textending);
+
+                var quit = BABYLON.GUI.Button.CreateSimpleButton("Quit Button", "Quit");
+                quit.width = 0.1;
+                quit.height = 0.1;
+                quit.color = "black";
+                quit.fontSize = 25;
+                quit.fontFamily = "Verdana";
+                quit.background = "white";
+                quit.cornerRadius = "100";
+
+                quit.onPointerUpObservable.add(function() {
+                    engine.stopRenderLoop();
+                    gameOn = false;
+                    engine.runRenderLoop(function()
+                    {
+                        menuscene.render();
+                    })
+                });
+                endingStory.addControl(quit);
+
+
+                // Game scene
+                var scene = new BABYLON.Scene(engine);
+                
+                // Gear Owned UI 
+                var GUIgame = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("myUI");
+                GUIgame.layer.layerMask = 1;
+                GUIgame.rootContainer.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+                GUIgame.rootContainer.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+                GUIgame.rootContainer.left = "-40%";
+                GUIgame.rootContainer.top = "-45%";
+                var item = 0;
+                var item_text = new BABYLON.GUI.TextBlock('Item')
+                item_text.color = "white";
+                item_text.fontsize = 2;            
+                GUIgame.addControl(item_text);
+
+                //Camera Game Scene
+                var camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 3, 0), scene);
+                camera.attachControl(canvas, true);
+                // camera.applyGravity = scene.activeCamera.applyGravity;
+                // W
+                camera.keysUp.push(87); 
+                // A
+                camera.keysLeft.push(65);
+                // S
+                camera.keysDown.push(83);
+                // D
+                camera.keysRight.push(68);
+
+                //Speed of the camera
+                camera.speed = 0.3;
+                
+                // Enable Collisions
+                scene.collisionsEnabled = true;
+
+                //Then apply collisions 
+                camera.checkCollisions = true;
+
+                //Set the ellipsoid around the camera
+                camera.ellipsoid = new BABYLON.Vector3(1, 1, 1);
+
+                //Camera gravity
+                camera.applyGravity = true;
+
+                var lights = new BABYLON.HemisphericLight('lights', new BABYLON.Vector3(1,1,1), scene);
+                
+                var ground = BABYLON.Mesh.CreateGround("ground1", 100, 100, 100, scene);
+                
+                //Enable ground collisions
+                ground.collisionsEnabled = true;                
+                
+                // Skybox harus ada nx, ny, nz, px, py, pz
+                var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:10000.0}, scene);
+                var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+                skyboxMaterial.backFaceCulling = false;
+                skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("Skyboxes_cloud/browncloud", scene);
+                skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+                skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+                skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+                skybox.material = skyboxMaterial;		       
+                
+
+                // RUINED CITY MODEL
+                var cityMesh = BABYLON.SceneLoader.ImportMesh("","./","harp.babylon", scene, function(newMeshes){
+                    newMeshes.forEach((city,index)=>{
+                        city.checkCollisions = true;
+                        city.collisionsEnabled = true;
+                        city.receiveShadows = true;  
+                        
+                    })
+                }); 
+
+                // Helicopter Model 
+                var HeliMesh = BABYLON.SceneLoader.ImportMesh("","./","heli.babylon",scene,function(heliMeshes){
+                    heliMeshes.forEach((heli,index)=>{
+                        heli.checkCollisions = true;
+                        heli.collisionsEnabled = true;
+                        heli.receiveShadows = true;
+                    })
+                });
+
+                
+
+                //Ruined sky parts
+                var flyMesh = new BABYLON.SceneLoader.ImportMesh("","./","fly.babylon", scene, function(flyMeshes){
+                    var flyMesh = new flyMesh[0];
+                        
+                        var animationFly = new BABYLON.Animation("animationFly","position.y",7,BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+                        var keys = [];
+                        keys.push({
+                            frame: 0,
+                            value: 10
+                        });
+                        keys.push({
+                            frame: 100,
+                            value: 5
+                        });
+                        animationFly.setKeys(keys);
+                        flyMeshes.animations = [animationFly]
+                        scene.beginAnimation(flyMeshes, 0, 100, true);
+                });
+
+
+                //Spare parts of helicopter parts
+                var box = BABYLON.MeshBuilder.CreateBox("box", scene);
+                box.position = new BABYLON.Vector3(-470,4,4);
+                box.scaling.x = 9;
+                box.scaling.y = 9;
+                box.scaling.z = 9;
+                box.checkCollisions = true;
+                box.collisionsEnabled = true;
+                animateSphere(box);
+
+                var box2 = BABYLON.MeshBuilder.CreateBox("box2", scene);
+                box2.position = new BABYLON.Vector3(140,4,250);
+                box2.scaling.x = 9;
+                box2.scaling.y = 9;
+                box2.scaling.z = 9;
+                box2.checkCollisions = true;
+                box2.collisionsEnabled = true;
+                animateSphere(box2);
+                
+                var box3 = BABYLON.MeshBuilder.CreateBox("box3", scene);
+                box3.position = new BABYLON.Vector3(-150,4,-250);
+                box3.scaling.x = 9;
+                box3.scaling.y = 9;
+                box3.scaling.z = 9;
+                box3.checkCollisions = true;
+                box3.collisionsEnabled = true;
+                animateSphere(box3);
+
+                var box4 = BABYLON.MeshBuilder.CreateBox("box4", scene);
+                box4.position = new BABYLON.Vector3(80,4,-30);
+                box4.scaling.x = 9;
+                box4.scaling.y = 9;
+                box4.scaling.z = 9;
+                box4.checkCollisions = true;
+                box4.collisionsEnabled = true;
+                animateSphere(box4);
+
+                var box5 = BABYLON.MeshBuilder.CreateBox("box5", scene);
+                box5.position = new BABYLON.Vector3(-70,4,90);
+                box5.scaling.x = 9;
+                box5.scaling.y = 9;
+                box5.scaling.z = 9;
+                box5.checkCollisions = true;
+                box5.collisionsEnabled = true;
+                animateSphere(box5);
+
+                var box6 = BABYLON.MeshBuilder.CreateBox("box6", scene);
+                box6.position = new BABYLON.Vector3(30,4,130);
+                box6.scaling.x = 9;
+                box6.scaling.y = 9;
+                box6.scaling.z = 9;
+                box6.checkCollisions = true;
+                box6.collisionsEnabled = true;
+                animateSphere(box6);
+
+                //Magic Box
+                var sphereHeli = BABYLON.MeshBuilder.CreateSphere("sphereHeli", scene);
+                sphereHeli.position = new BABYLON.Vector3(40,2,38);
+                sphereHeli.isVisible = false;
+                sphereHeli.scaling.x = 20;
+                sphereHeli.scaling.y = 9;
+                sphereHeli.scaling.z = 9;
+                sphereHeli.checkCollisions = true;
+                sphereHeli.collisionsEnabled = true;
+
+
+                // Function for animateMesh
+                function animateSphere(mesh){
+                    var animationSphere = new BABYLON.Animation("animateSphere", "rotation.x", 100, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+                    var sphereKeys = [];
+                    sphereKeys.push({
+                        frame: 0,
+                        value: 0
+                    });
+                    sphereKeys.push({
+                        frame : 100,
+                        value: 1
+                    });
+                    animationSphere.setKeys(sphereKeys);
+                    mesh.animations = [animationSphere]
+                    scene.beginAnimation(mesh, 0, 100, true);
+                }
+                
+                //TEXTURE PARTS (Spare parts) 
+                //Texture 1
+                var texture1 = new BABYLON.StandardMaterial("texture1", scene);
+                texture1.diffuseTexture = new BABYLON.Texture("sparepart1.jpg");
+                box.material = texture1;
+                box4.material = texture1;
+
+                //texture 2
+                var texture2 = new BABYLON.StandardMaterial("texture2", scene);
+                texture2.diffuseTexture = new BABYLON.Texture("sparepart2.jpg");
+                box2.material = texture2;
+                box5.material = texture2;
+
+                var texture3 = new BABYLON.StandardMaterial("texture3", scene);
+                texture3.diffuseTexture = new BABYLON.Texture("sparepart3.jpg");
+                box3.material = texture3;
+                box6.material = texture3;
+
+                // Camera collide with another objects
+                camera.onCollide = function(collided){
+                    if(collided.uniqueId == box.uniqueId){
+                        // sphere.position = new BABYLON.Vector3(-10,7,5);
+                        // box.isVisible = false;
+                        effect.play();
+                        effect.setVolume(volume);
+                        box.position = new BABYLON.Vector3(-10,-10,-10);
+                        item++;
+                        item_text.text = "Gear Owned : " + item;
+                        // alert("GAME OVER")
+                        //Pop up window
+                        // alert("Congrats");
+                    };
+                    if(collided.uniqueId == box2.uniqueId){
+                        effect.play();
+                        effect.setVolume(volume);
+                        box2.position = new BABYLON.Vector3(-10,-10,-10);
+                        item++;
+                        item_text.text = "Gear Owned : " + item;
+                    };
+                    if(collided.uniqueId == box3.uniqueId){
+                        effect.play();
+                        effect.setVolume(volume);
+                        box3.position = new BABYLON.Vector3(-10,-10,-10);
+                        item++;
+                        item_text.text = "Gear Owned : " + item;
+                        // alert("Congrats");
+                    };
+                    if(collided.uniqueId == box4.uniqueId){
+                        effect.play();
+                        effect.setVolume(volume);
+                        box4.position = new BABYLON.Vector3(-10,-10,-10);
+                        item++;
+                        item_text.text = "Gear Owned : " + item;
+                    };
+                    if(collided.uniqueId == box5.uniqueId){
+                        effect.play();
+                        effect.setVolume(volume);
+                        box5.position = new BABYLON.Vector3(-10,-10,-10);
+                        item++;
+                        item_text.text = "Gear Owned : " + item;
+                    };
+                    if(collided.uniqueId == box6.uniqueId){
+                        effect.play();
+                        effect.setVolume(volume);
+                        box6.position = new BABYLON.Vector3(-10,-10,-10);
+                        item++;
+                        item_text.text = "Gear Owned : " + item;
+                    };
+                    if(collided.uniqueId == sphereHeli.uniqueId){
+                        if(item == 6){
+                            sphereHeli.position = new BABYLON.Vector3(-10,-10,-10);
+                            alert("CONGRATULATIONS");
+                            engine.runRenderLoop(function(){
+                                endingscene.render();
+                            });
+                        };
+                    };
+                }
+
+                // Setting button, Choosing mode for sky and fog
+                var buttonbox = document.createElement('div');
+                buttonbox.id = "buttonbox";
+                buttonbox.style.position = "absolute";
+                buttonbox.style.top = "80%";
+                buttonbox.style.left = "90%";
+                buttonbox.style.padding = "2pt";
+                buttonbox.style.paddingRight = "2pt";
+                buttonbox.style.width = "10em";
+                buttonbox.style.color = "gray";
+                document.body.appendChild(buttonbox);
+                
+                //Yellow Sky Button
+                var yellowskyButton = document.createElement('button');
+                yellowskyButton.id = "YellowCloud";
+                yellowskyButton.textContent = "Yellow Cloud";
+                yellowskyButton.style.width = "70%";
+                yellowskyButton.style.fontSize = "0.30cm";
+                buttonbox.appendChild(yellowskyButton);
+                yellowskyButton.onclick = function() {
+                    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("Skyboxes_cloud/yellowcloud", scene);
+                    skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+                }
+
+                //Blue Sky Button
+                var blueskyButton = document.createElement('button');
+                blueskyButton.id = "BlueCloud";
+                blueskyButton.textContent = "Blue Cloud";
+                blueskyButton.style.width = "70%";
+                blueskyButton.style.fontSize = "0.30cm";
+                buttonbox.appendChild(blueskyButton);
+                blueskyButton.onclick = function() {
+                    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("Skyboxes_cloud/bluecloud", scene);
+                    skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+                }
+
+                //Brown Sky Button 
+                var brownskyButton = document.createElement('button');
+                brownskyButton.id = "BrownCloud";
+                brownskyButton.textContent = "Brown Cloud";
+                brownskyButton.style.width = "70%";
+                brownskyButton.style.fontSize = "0.30cm";
+                buttonbox.appendChild(brownskyButton);
+                brownskyButton.onclick = function() {
+                    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("Skyboxes_cloud/browncloud", scene);
+                    skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+                }
+
+                //Gray Sky Button
+                var grayskyButton = document.createElement('button');
+                grayskyButton.id = "GrayCloud";
+                grayskyButton.textContent = "Gray Cloud";
+                grayskyButton.style.width = "70%";
+                grayskyButton.style.fontSize = "0.30cm";
+                buttonbox.appendChild(grayskyButton);
+                grayskyButton.onclick = function() {
+                    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("Skyboxes_cloud/graycloud", scene);
+                    skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+                }
+
+                //Fog Sky Button
+                var FogskyButton = document.createElement('button');
+                FogskyButton.id = "FogCloud";
+                FogskyButton.textContent = "Fog Mode";
+                FogskyButton.style.width = "70%";
+                FogskyButton.style.fontSize = "0.30cm";
+                buttonbox.appendChild(FogskyButton);
+                FogskyButton.onclick = function() {
+                    // Linear Fog
+                    scene.fogMode = BABYLON.Scene.FOGMODE_LINEAR;
+
+                    scene.fogStart = 20.0;
+                    scene.fogEnd = 670.0;
+
+                    scene.fogColor = new BABYLON.Color3(0.9, 0.9, 0.85);
+                    scene.fogDensity = 0.0025;
+                    var alpha = 0;
+                    scene.registerBeforeRender(function () {
+                        scene.fogDensity = Math.cos(alpha) / 10;
+                        alpha += 0.01;
+                    });
+
+                }
+                
+                var music = new BABYLON.Sound("sound", "background.wav", scene, null, { 
+                    loop: true, 
+                    autoplay: true 
+                });
+
+                var effect = new BABYLON.Sound("sound2", "effect.wav", scene);
+                var volume = 5;
+                
+                return scene;
+            }
+            var menuscene = createScene();
+            var storyscene = createScene();
+            var scene = createScene();
+            var endingscene = createScene();
+
+            // engine.runRenderLoop(function(){
+            //     scene.render();
+            // });
+            
+            window.addEventListener('resize', function(){
+                engine.resize();
+            })
+        });
+    </script>
+</body>
+</html>
